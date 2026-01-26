@@ -423,9 +423,20 @@ namespace CrowdControl.Games.Packs.Sonic3DBlast
             bool success = base.StopAllEffects(); 
             try
             {
-                success &= Connector.Unfreeze(Sonic3DBlastAddresses.ADDR_LIVES);
-                success &= Connector.Unfreeze(Sonic3DBlastAddresses.ADDR_SONIC_INVINCIBILITY);
-                success &= Connector.Unfreeze(Sonic3DBlastAddresses.ADDR_SONIC_SPEED_SHOES);
+                if (rom_type == ROMType.DIRECTORS_CUT)
+                {
+                    success &= Connector.Unfreeze(DirectorsCutAddresses.ADDR_LIVES);
+                    success &= Connector.Unfreeze(DirectorsCutAddresses.ADDR_SONIC_VELOCITY_X);
+                    success &= Connector.Unfreeze(DirectorsCutAddresses.ADDR_SONIC_VELOCITY_Y);
+                    success &= Connector.Unfreeze(DirectorsCutAddresses.ADDR_SONIC_VELOCITY_Z);
+                }
+                else
+                {
+                    success &= Connector.Unfreeze(Sonic3DBlastAddresses.ADDR_LIVES);
+                    success &= Connector.Unfreeze(Sonic3DBlastAddresses.ADDR_SONIC_VELOCITY_X);
+                    success &= Connector.Unfreeze(Sonic3DBlastAddresses.ADDR_SONIC_VELOCITY_Y);
+                    success &= Connector.Unfreeze(Sonic3DBlastAddresses.ADDR_SONIC_VELOCITY_Z);
+                }
             }
             catch { success = false; }
             return success;
