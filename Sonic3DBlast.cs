@@ -78,7 +78,7 @@ namespace CrowdControl.Games.Packs.Sonic3DBlast
                     new("Stop", "Stop")
                         { Price = 20, Description = "Stop the player for a moment." },
                     new("Invert Controls", "InvertControls")
-                        { Price = 25, Duration=20, Description = "Stop the player for a moment." },
+                        { Price = 25, Duration=20, Description = "Invert the players controls." },
                     new("No Jump", "NoJump")
                         { Price = 25, Duration=20, Description = "Prevent the player from jumping." },
                     new("No Spin", "NoSpin")
