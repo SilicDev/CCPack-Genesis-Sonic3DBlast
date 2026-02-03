@@ -10,11 +10,7 @@ public partial class Sonic3DBlast
     {
         public NoJump(Sonic3DBlast pack) : base(pack) { }
 
-        public override EffectHandlerType Type => EffectHandlerType.Durational;
-
         public override IList<string> Codes { get; } = new[] { "NoJump" };
-
-        public override SITimeSpan RefreshInterval { get; } = SITimeSpan.FromSeconds(0.05);
 
         public override bool StartAction()
         {

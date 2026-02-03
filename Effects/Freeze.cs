@@ -12,12 +12,30 @@ public partial class Sonic3DBlast
 
         public override EffectHandlerType Type => EffectHandlerType.Instant;
 
-        public override IList<string> Codes { get; } = new[] { "AddRing" };
+        public override IList<string> Codes { get; } = new[] { "Freeze" };
 
         public override EffectPack.Mutex Mutexes { get; } = new[] { "sonic" };
 
+        public override bool RetryOnFail => IsValidLevel();
+
+        private bool IsValidLevel()
+        {
+            short level = 0;
+            if (EffectPack.rom_type == ROMType.DIRECTORS_CUT)
+                Connector.Read16(DirectorsCutAddresses.ADDR_CURRENT_LEVEL_INDEX, out level);
+            else
+                Connector.Read16(Sonic3DBlastAddresses.ADDR_CURRENT_LEVEL_INDEX, out level);
+            Log.Message($"Level: {level}");
+            return !(level % 3 == 0 || level == 0x16 || level == 4 || level >= 0x13);
+        }
+
         public override bool StartCondition()
         {
+            if (!IsValidLevel())
+            {
+                EffectPack.Respond(Request, EffectStatus.FailPermanent, "Freeze breaks in this level");
+                return false;
+            }
             short anim = 0;
             if (EffectPack.rom_type == ROMType.DIRECTORS_CUT)
                 Connector.Read16(DirectorsCutAddresses.ADDR_SONIC_ANIMATION, out anim);

@@ -167,6 +167,7 @@ namespace CrowdControl.Games.Packs.Sonic3DBlast
         public class Sonic3DBlastAddresses
         {
             public const uint ADDR_CURRENT_LEVEL = 0x00FF0678;
+            public const uint ADDR_CURRENT_LEVEL_INDEX = 0x00FF067E;
             public const uint ADDR_IN_DEMO = 0x00FF0410;
             public const uint ADDR_LIVES = 0x00FF0680;
             public const uint ADDR_SPECIAL_STAGE_FLAG = 0x00FF0684;
@@ -214,6 +215,7 @@ namespace CrowdControl.Games.Packs.Sonic3DBlast
             public const uint ADDR_DX_ENABLED = 0x00FF0410;
 
             public const uint ADDR_CURRENT_LEVEL = 0x00FF06B2;
+            public const uint ADDR_CURRENT_LEVEL_INDEX = 0x00FF06B8;
             public const uint ADDR_IN_DEMO = 0x00FF0440;
             public const uint ADDR_LIVES = 0x00FF06BA;
             public const uint ADDR_SPECIAL_STAGE_FLAG = 0x00FF06BE;
