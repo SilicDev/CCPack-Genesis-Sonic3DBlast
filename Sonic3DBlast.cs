@@ -85,6 +85,8 @@ namespace CrowdControl.Games.Packs.Sonic3DBlast
                         { Price = 25, Duration=20, Description = "Prevent the player from spindashing." },
                     new("Freeze Player", "Freeze")
                         { Price = 50, Description = "Freeze the player." },
+                    /*new("Spawn Bumper", "Bumper")
+                        { Price = 10, Description = "Spawns a bumper." },*/
                 ];
                 return effects;
             }
@@ -153,7 +155,7 @@ namespace CrowdControl.Games.Packs.Sonic3DBlast
             base.Dispose(disposing);
         }
 
-        private Buttons buttons_to_send = Buttons.BUTTON_ALL;
+        private ControlOverrides controlOverrides = ControlOverrides.NONE;
         private ROMType rom_type = ROMType.UNKNOWN;
         private ROMType old_rom_type = ROMType.UNKNOWN;
 
@@ -184,6 +186,9 @@ namespace CrowdControl.Games.Packs.Sonic3DBlast
 
             public const uint ADDR_SONIC = 0x00FFC1E6;
             // position and velocity are 2.2 byte fixed point numbers
+            public const uint ADDR_SONIC_POSITION_X = 0x00FFC1EC;
+            public const uint ADDR_SONIC_POSITION_Y = 0x00FFC1F0;
+            public const uint ADDR_SONIC_POSITION_Z = 0x00FFC1F4;
             public const uint ADDR_SONIC_VELOCITY_X = 0x00FFC1F8;
             public const uint ADDR_SONIC_VELOCITY_Y = 0x00FFC1FC;
             public const uint ADDR_SONIC_VELOCITY_Z = 0x00FFC200;
@@ -198,6 +203,9 @@ namespace CrowdControl.Games.Packs.Sonic3DBlast
             public const uint ADDR_SONIC_INVINCIBILITY = 0x00FFC262;
             public const uint ADDR_SONIC_SPEED_SHOES = 0x00FFC264;
             public const uint ADDR_SONIC_ANIMATION = 0x00FFC27A;
+
+            public const uint ADDR_OBJECT_OFFSET = 0x00FFC28C;
+            public const uint ADDR_NEXT_OBJECT = 0x00FF0AAE;
         }
 
         public class DirectorsCutAddresses
@@ -225,6 +233,9 @@ namespace CrowdControl.Games.Packs.Sonic3DBlast
 
             public const uint ADDR_SONIC = 0x00FFC358;
             // position and velocity are 2.2 byte fixed point numbers
+            public const uint ADDR_SONIC_POSITION_X = 0x00FFC35E;
+            public const uint ADDR_SONIC_POSITION_Y = 0x00FFC362;
+            public const uint ADDR_SONIC_POSITION_Z = 0x00FFC366;
             public const uint ADDR_SONIC_VELOCITY_X = 0x00FFC36A;
             public const uint ADDR_SONIC_VELOCITY_Y = 0x00FFC36E;
             public const uint ADDR_SONIC_VELOCITY_Z = 0x00FFC372;
@@ -239,16 +250,28 @@ namespace CrowdControl.Games.Packs.Sonic3DBlast
             public const uint ADDR_SONIC_INVINCIBILITY = 0x00FFC3D4;
             public const uint ADDR_SONIC_SPEED_SHOES = 0x00FFC3D6;
             public const uint ADDR_SONIC_ANIMATION = 0x00FFC3EE;
+
+            public const uint ADDR_OBJECT_OFFSET = 0x00FFC400;
+            public const uint ADDR_NEXT_OBJECT = 0x00FF0B18;
         }
 
-        enum ROMType
+        enum ROMType : byte
         {
             UNKNOWN,
             DEFAULT,
             DIRECTORS_CUT,
         }
 
-        enum SonicAnimations
+        [Flags]
+        enum ControlOverrides : byte
+        {
+            NONE = 0,
+            INVERT_DPAD = 1,
+            NO_JUMP = 2,
+            NO_SPIN = 4,
+        }
+
+        enum SonicAnimations : byte
         {
             IDLE,
             RUNNING,
@@ -274,7 +297,7 @@ namespace CrowdControl.Games.Packs.Sonic3DBlast
             TRANSFORM_SUPER,
         }
 
-        enum Shields
+        enum Shields : ushort
         {
             NONE = 0,
             DEFAULT = 0x46C0,
@@ -282,7 +305,7 @@ namespace CrowdControl.Games.Packs.Sonic3DBlast
             RED = 0x06C0
         }
 
-        enum MonitorEffects
+        enum MonitorEffects : ushort
         {
             NONE = 0,
             EXTRA_LIFE = 0x80,
@@ -293,7 +316,7 @@ namespace CrowdControl.Games.Packs.Sonic3DBlast
             RED_SHIELD = 0x380,
         }
 
-        enum Enemies
+        enum Enemies : byte
         {
             NONE = 0,
             GGZ_ANT = 0x04,
@@ -305,32 +328,33 @@ namespace CrowdControl.Games.Packs.Sonic3DBlast
             DDZ_ICE_DUST = 0xE4,
         }
 
-        enum Buttons
+        [Flags]
+        enum Buttons : ushort
         {
             BUTTON_NONE = 0x00,
             BUTTON_UP = 0x01,
             BUTTON_DOWN = 0x02,
             BUTTON_LEFT = 0x04,
             BUTTON_RIGHT = 0x08,
-            BUTTON_DPAD = 0x0F,
+            BUTTON_DPAD = BUTTON_UP | BUTTON_DOWN | BUTTON_LEFT | BUTTON_RIGHT,
             BUTTON_B = 0x10, // Spin
             BUTTON_C = 0x20, // Jump
             BUTTON_A = 0x40, // Jump
-            BUTTON_ABC = 0x70,
+            BUTTON_ABC = BUTTON_B | BUTTON_A | BUTTON_C,
             BUTTON_START = 0x80,
-            BUTTON_ALL = 0xFF,
+            BUTTON_ALL = BUTTON_DPAD | BUTTON_ABC | BUTTON_START,
             // 6 Button controls (unused?)
             BUTTON_Z = 0x0100,
             BUTTON_Y = 0x0200,
             BUTTON_X = 0x0400,
-            BUTTON_XYZ = 0x0700,
-            BUTTON_ABCXYZ = 0x0770,
+            BUTTON_XYZ = BUTTON_Z | BUTTON_Y | BUTTON_X,
+            BUTTON_ABCXYZ = BUTTON_ABC | BUTTON_XYZ,
             BUTTON_MODE = 0x0800,
-            BUTTON_STARTMODE = 0x0880,
-            BUTTON_ALL_6BUTTON = 0x0FFF,
+            BUTTON_STARTMODE = BUTTON_START | BUTTON_MODE,
+            BUTTON_ALL_6BUTTON = BUTTON_ALL | BUTTON_XYZ | BUTTON_MODE,
         }
 
-        enum Sounds
+        enum Sounds : byte
         {
             NONE = 0,
             BGM_GGZ1 = 0x1,
@@ -358,7 +382,7 @@ namespace CrowdControl.Games.Packs.Sonic3DBlast
             BGM_CONTINUE = 0x17,
             JINGLE_LEVELCLEAR = 0x18,
             JINGLE_LIFE_GET = 0x19, // Beeps at the end
-            JINGLE_CONTINUE_GET = 0x1A,
+            JINGLE_CHAOS_EMERALD = 0x1A,
             BGM_INVINCIBILITY = 0x1B,
             BGM_MAIN_MENU = 0x1C,
             // Remaining ids map to main menu
@@ -399,10 +423,12 @@ namespace CrowdControl.Games.Packs.Sonic3DBlast
             SFX_FREEZE = 0x80,
             SFX_CHAIN = 0x94,
             SFX_COLLIDE = 0x9A,
+            SFX_BUMPER = 0xAA,
             SFX_SPINDASHREV = 0xAB,
             SFX_SCORE_DING = 0xB0,
             SFX_SPRING = 0xB1,
             SFX_SPINDASH_RELEASE = 0xB6,
+            SFX_GAMBA_REEL = 0xB7,
             SFX_SIREN = 0xBE,
             SFX_SWING = 0xC9,
             SFX_DEZ_RINGS = 0xCA,
@@ -440,6 +466,78 @@ namespace CrowdControl.Games.Packs.Sonic3DBlast
             }
             catch { success = false; }
             return success;
+        }
+
+        public struct SpawnData
+        {
+            public ushort collide_flag = 0;
+            public ushort gravity = 0;
+            public ushort sprite_flags = 0;
+            public uint f_0x06 = 0;
+            public ushort f_0x0A = 0;
+            public ushort lifetime = 0;
+            public uint f_0x0E = 0;
+
+            public SpawnData() { }
+        }
+
+        public uint GetNextObjectSlot()
+        {
+            uint offset_base = rom_type == ROMType.DIRECTORS_CUT ? DirectorsCutAddresses.ADDR_OBJECT_OFFSET : Sonic3DBlastAddresses.ADDR_OBJECT_OFFSET;
+            short next_offset = 0;
+            uint object_ptr = 0;
+            bool success = true;
+            while (true)
+            {
+                if (rom_type == ROMType.DIRECTORS_CUT)
+                    success &= Connector.Read16(DirectorsCutAddresses.ADDR_NEXT_OBJECT, out next_offset);
+                else
+                    success &= Connector.Read16(Sonic3DBlastAddresses.ADDR_NEXT_OBJECT, out next_offset);
+                next_offset += 0x38;
+                if (next_offset > 0x68f)
+                    next_offset = 0;
+
+                if (rom_type == ROMType.DIRECTORS_CUT)
+                    success &= Connector.Write16(DirectorsCutAddresses.ADDR_NEXT_OBJECT, next_offset);
+                else
+                    success &= Connector.Write16(Sonic3DBlastAddresses.ADDR_NEXT_OBJECT, next_offset);
+
+                object_ptr = (uint)(offset_base + next_offset);
+                short x_pos = 0;
+                success &= Connector.Read16(object_ptr + 0x6, out x_pos);
+                short flag = 0;
+                success &= Connector.Read16(object_ptr + 0x30, out flag);
+                if (x_pos == 0 || (flag & 0x100) == 0)
+                    break;
+                offset_base = (uint)(offset_base - next_offset);
+            }
+            return object_ptr;
+        }
+
+        public uint CreateObjectAtXYZ(SpawnData spawn_data, short x, short y, short z)
+        {
+            uint object_ptr = GetNextObjectSlot();
+            bool success = Connector.Write16(object_ptr + 0x04, spawn_data.collide_flag);
+            success &= Connector.Write16(object_ptr + 0x06, x);
+            success &= Connector.Write16(object_ptr + 0x08, 0);
+            success &= Connector.Write16(object_ptr + 0x0A, y);
+            success &= Connector.Write16(object_ptr + 0x0C, 0);
+            success &= Connector.Write16(object_ptr + 0x0E, z);
+            success &= Connector.Write16(object_ptr + 0x10, 0);
+            success &= Connector.Write16(object_ptr + 0x22, 0x0); // id
+            success &= Connector.Write16(object_ptr + 0x24, spawn_data.gravity);
+            success &= Connector.Write16(object_ptr + 0x26, (ushort)((z & 0xFFE0) * 8 + (x & 0xFFE0) >> 4));
+            success &= Connector.Write16(object_ptr + 0x28, 0);
+            success &= Connector.Write16(object_ptr + 0x2A, (ushort)(spawn_data.f_0x06 >> 16));
+            success &= Connector.Write16(object_ptr + 0x2C, (ushort)(spawn_data.f_0x06 & 0xFFFF));
+            success &= Connector.Write16(object_ptr + 0x2E, spawn_data.sprite_flags);
+            success &= Connector.Write16(object_ptr + 0x30, spawn_data.f_0x0A);
+            success &= Connector.Write16(object_ptr + 0x32, spawn_data.lifetime);
+            success &= Connector.Write16(object_ptr + 0x34, (ushort)(spawn_data.f_0x0E >> 16));
+            success &= Connector.Write16(object_ptr + 0x36, (ushort)(spawn_data.f_0x0E & 0xFFFF));
+            if (!success)
+                return 0xFFFFFFFF;
+            return object_ptr;
         }
     }
 }
