@@ -13,6 +13,29 @@ public partial class Sonic3DBlast
 
         public override SITimeSpan RefreshInterval { get; } = SITimeSpan.FromSeconds(0.05);
 
+        public override bool RefreshCondition()
+        {
+            if (EffectPack.rom_type == ROMType.DIRECTORS_CUT)
+            {
+                if (!Connector.IsEqual16(DirectorsCutAddresses.ADDR_PAUSE_STATE, 0))
+                    return false;
+                if (!Connector.IsEqual16(DirectorsCutAddresses.ADDR_SPECIAL_STAGE_FLAG, 0))
+                    return false;
+                if (!Connector.IsEqual16(DirectorsCutAddresses.ADDR_LEVEL_CLEAR_SCREEN, 0)) // 100 for level clear?
+                    return false;
+            }
+            else
+            {
+                if (!Connector.IsEqual16(Sonic3DBlastAddresses.ADDR_PAUSE_STATE, 0))
+                    return false;
+                if (!Connector.IsEqual16(Sonic3DBlastAddresses.ADDR_SPECIAL_STAGE_FLAG, 0))
+                    return false;
+                if (!Connector.IsEqual16(Sonic3DBlastAddresses.ADDR_LEVEL_CLEAR_SCREEN, 0)) // 100 for level clear?
+                    return false;
+            }
+            return true;
+        }
+
         public override bool RefreshAction()
         {
             byte temp = 0;

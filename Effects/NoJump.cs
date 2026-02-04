@@ -14,6 +14,8 @@ public partial class Sonic3DBlast
 
         public override bool StartAction()
         {
+            if ((EffectPack.controlOverrides & ControlOverrides.NO_JUMP) != ControlOverrides.NONE)
+                return false;
             EffectPack.controlOverrides |= ControlOverrides.NO_JUMP;
             return true;
         }

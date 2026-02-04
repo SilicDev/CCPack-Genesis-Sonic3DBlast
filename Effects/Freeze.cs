@@ -41,7 +41,7 @@ public partial class Sonic3DBlast
                 Connector.Read16(DirectorsCutAddresses.ADDR_SONIC_ANIMATION, out anim);
             else
                 Connector.Read16(Sonic3DBlastAddresses.ADDR_SONIC_ANIMATION, out anim);
-            return anim != (short)SonicAnimations.DIEING && anim != (short)SonicAnimations.FROZEN;
+            return anim != (short)SonicAnimations.DIEING && anim != (short)SonicAnimations.FROZEN && anim != (short)SonicAnimations.ON_A_RING;
         }
 
         public override bool StartAction()

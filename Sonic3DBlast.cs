@@ -46,13 +46,13 @@ namespace CrowdControl.Games.Packs.Sonic3DBlast
                     new("Give Ring", "AddRing")
                         { Price = 1, Description = "Give the player a ring." },
                     new("Take Ring", "TakeRing")
-                        { Price = 1, Description = "Take a ring from the player" },
+                        { Price = 2, Description = "Take a ring from the player" },
                     new("Slap", "Slap")
                         { Price = 5, Description = "Give the player a nice Slap." },
                     new("Kill", "Kill")
                         { Price = 100, Description = "Kills the player." },
                     new("SEGA!", "SEGA")
-                        { Price = 10, SessionCooldown=10, Description = "SEGA!" },
+                        { Price = 10, SessionCooldown = 10, Description = "SEGA!" },
                     new("Give Shield", "Shield")
                         { Price = 10, Description = "Gives A Shield to the player." },
                     new("Give Yellow Shield", "YellowShield")
@@ -66,25 +66,25 @@ namespace CrowdControl.Games.Packs.Sonic3DBlast
                     new("Drop Flicky", "LoseFlicky")
                         { Price = 20, Description = "Force the player to drop a flicky." },
                     new("Shove North", "ShoveNorth")
-                        { Price = 5, Description = "Shove the player north." },
+                        { Price = 10, Description = "Shove the player north." },
                     new("Shove West", "ShoveWest")
-                        { Price = 5, Description = "Shove the player west." },
+                        { Price = 10, Description = "Shove the player west." },
                     new("Shove South", "ShoveSouth")
-                        { Price = 5, Description = "Shove the player south." },
+                        { Price = 10, Description = "Shove the player south." },
                     new("Shove East", "ShoveEast")
-                        { Price = 5, Description = "Shove the player east." },
+                        { Price = 10, Description = "Shove the player east." },
                     new("Launch", "Launch")
-                        { Price = 10, Description = "Launch the player." },
+                        { Price = 20, Description = "Launch the player." },
                     new("Stop", "Stop")
-                        { Price = 20, Description = "Stop the player for a moment." },
+                        { Price = 25, Description = "Stop the player for a moment." },
                     new("Invert Controls", "InvertControls")
-                        { Price = 25, Duration=20, Description = "Invert the players controls." },
+                        { Price = 50, Duration = 15, Description = "Invert the players controls." },
                     new("No Jump", "NoJump")
-                        { Price = 25, Duration=20, Description = "Prevent the player from jumping." },
+                        { Price = 50, Duration = 15, Description = "Prevent the player from jumping." },
                     new("No Spin", "NoSpin")
-                        { Price = 25, Duration=20, Description = "Prevent the player from spindashing." },
+                        { Price = 50, Duration = 15, Description = "Prevent the player from spindashing." },
                     new("Freeze Player", "Freeze")
-                        { Price = 50, Description = "Freeze the player." },
+                        { Price = 75, Description = "Freeze the player." },
                     /*new("Spawn Bumper", "Bumper")
                         { Price = 10, Description = "Spawns a bumper." },*/
                 ];
@@ -121,6 +121,8 @@ namespace CrowdControl.Games.Packs.Sonic3DBlast
                             return GameState.Cutscene;
                         if (!Connector.IsEqual16(DirectorsCutAddresses.ADDR_PAUSE_STATE, 0))
                             return GameState.Paused;
+                        if (!Connector.IsEqual16(DirectorsCutAddresses.ADDR_LEVEL_CLEAR_SCREEN, 0))
+                            return GameState.Loading;
                         if (!Connector.IsEqual16(DirectorsCutAddresses.ADDR_CURRENT_LEVEL, 0))
                         {
                             if (!Connector.Freeze16(DirectorsCutAddresses.ADDR_LIVES, 9))
@@ -138,6 +140,8 @@ namespace CrowdControl.Games.Packs.Sonic3DBlast
                             return GameState.Cutscene;
                         if (!Connector.IsEqual16(Sonic3DBlastAddresses.ADDR_PAUSE_STATE, 0))
                             return GameState.Paused;
+                        if (!Connector.IsEqual16(Sonic3DBlastAddresses.ADDR_LEVEL_CLEAR_SCREEN, 0))
+                            return GameState.Loading;
                         if (!Connector.IsEqual16(Sonic3DBlastAddresses.ADDR_CURRENT_LEVEL, 0))
                         {
                             if (!Connector.Freeze16(Sonic3DBlastAddresses.ADDR_LIVES, 9))
@@ -184,6 +188,7 @@ namespace CrowdControl.Games.Packs.Sonic3DBlast
             public const uint ADDR_SOUND2 = 0x00FF0AC6;
             public const uint ADDR_CURRENT_BGM = 0x00FF0AC8;
             public const uint ADDR_PAUSE_STATE = 0x00FF0AE0;
+            public const uint ADDR_LEVEL_CLEAR_SCREEN = 0x00FF0B76;
 
             public const uint ADDR_SONIC = 0x00FFC1E6;
             // position and velocity are 2.2 byte fixed point numbers
@@ -232,6 +237,7 @@ namespace CrowdControl.Games.Packs.Sonic3DBlast
             public const uint ADDR_SOUND2 = 0x00FF0B30;
             public const uint ADDR_CURRENT_BGM = 0x00FF0B32;
             public const uint ADDR_PAUSE_STATE = 0x00FF0BB0;
+            public const uint ADDR_LEVEL_CLEAR_SCREEN = 0x00FF0C48;
 
             public const uint ADDR_SONIC = 0x00FFC358;
             // position and velocity are 2.2 byte fixed point numbers
