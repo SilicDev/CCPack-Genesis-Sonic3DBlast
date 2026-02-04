@@ -33,7 +33,7 @@ public partial class Sonic3DBlast
         {
             if (!IsValidLevel())
             {
-                EffectPack.Respond(Request, EffectStatus.FailPermanent, "Freeze breaks in this level");
+                EffectPack.Respond(Request, EffectStatus.FailTemporary, "Freeze breaks in this level");
                 return false;
             }
             short anim = 0;
