@@ -1,6 +1,7 @@
-﻿using ConnectorLib;
+﻿//#define DEBUG
+
+using ConnectorLib;
 using ConnectorLib.Inject.Emulator;
-using ConnectorLib.sd2snes.usb2snes;
 using CrowdControl.Common;
 using CrowdControl.Games.SmartEffects;
 using JetBrains.Annotations;
@@ -10,7 +11,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using ConnectorType = CrowdControl.Common.ConnectorType;
-
 
 //ccpragma { "include" : [ ".\\Effects\\*.cs" ] }
 namespace CrowdControl.Games.Packs.Sonic3DBlast
@@ -83,8 +83,10 @@ namespace CrowdControl.Games.Packs.Sonic3DBlast
                         { Price = 50, Duration = 15, Description = "Prevent the player from jumping." },
                     new("No Spin", "NoSpin")
                         { Price = 50, Duration = 15, Description = "Prevent the player from spindashing." },
+#if DEBUG
                     new("Freeze Player", "Freeze")
                         { Price = 75, Description = "Freeze the player." },
+#endif
                     /*new("Spawn Bumper", "Bumper")
                         { Price = 10, Description = "Spawns a bumper." },*/
                 ];

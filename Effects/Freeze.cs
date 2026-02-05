@@ -1,3 +1,5 @@
+//#define DEBUG
+
 using ConnectorLib;
 using CrowdControl.Games.SmartEffects;
 
@@ -20,13 +22,17 @@ public partial class Sonic3DBlast
 
         private bool IsValidLevel()
         {
+#if DEBUG
+            return true;
+#else
             short level = 0;
             if (EffectPack.rom_type == ROMType.DIRECTORS_CUT)
                 Connector.Read16(DirectorsCutAddresses.ADDR_CURRENT_LEVEL_INDEX, out level);
             else
                 Connector.Read16(Sonic3DBlastAddresses.ADDR_CURRENT_LEVEL_INDEX, out level);
             Log.Message($"Level: {level}");
-            return !(level % 3 == 0 || level == 0x16 || level == 4 || level >= 0x13);
+            return !(level % 3 == 0 || level == 0x16 || level == 4 || level >= 0x10);
+#endif
         }
 
         public override bool StartCondition()
