@@ -21,7 +21,8 @@ public partial class Sonic3DBlast
                     return false;
                 if (!Connector.IsEqual16(DirectorsCutAddresses.ADDR_SPECIAL_STAGE_FLAG, 0))
                     return false;
-                if (!Connector.IsEqual16(DirectorsCutAddresses.ADDR_LEVEL_CLEAR_SCREEN, 0)) // 100 for level clear?
+                if (Connector.IsEqual16(DirectorsCutAddresses.ADDR_LEVEL_FLICKY_BONUS, 100) ||
+                        Connector.IsEqual16(DirectorsCutAddresses.ADDR_LEVEL_FLICKY_BONUS, 150))
                     return false;
             }
             else
@@ -30,7 +31,8 @@ public partial class Sonic3DBlast
                     return false;
                 if (!Connector.IsEqual16(Sonic3DBlastAddresses.ADDR_SPECIAL_STAGE_FLAG, 0))
                     return false;
-                if (!Connector.IsEqual16(Sonic3DBlastAddresses.ADDR_LEVEL_CLEAR_SCREEN, 0)) // 100 for level clear?
+                if (Connector.IsEqual16(DirectorsCutAddresses.ADDR_LEVEL_FLICKY_BONUS, 100) ||
+                        Connector.IsEqual16(DirectorsCutAddresses.ADDR_LEVEL_FLICKY_BONUS, 150))
                     return false;
             }
             return true;
@@ -75,9 +77,9 @@ public partial class Sonic3DBlast
             }
             out_buttons |= buttons;
             if (EffectPack.rom_type == ROMType.DIRECTORS_CUT)
-                return success & Connector.Write16(DirectorsCutAddresses.ADDR_FORCED_CONTROLS, (byte)out_buttons);
+                return success & Connector.Write16(DirectorsCutAddresses.ADDR_FORCED_CONTROLS, (ushort)out_buttons);
             else
-                return success & Connector.Write16(Sonic3DBlastAddresses.ADDR_FORCED_CONTROLS, (byte)out_buttons);
+                return success & Connector.Write16(Sonic3DBlastAddresses.ADDR_FORCED_CONTROLS, (ushort)out_buttons);
         }
     }
 }

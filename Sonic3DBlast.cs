@@ -1,4 +1,5 @@
 ﻿//#define DEBUG
+#define BETA
 
 using ConnectorLib;
 using ConnectorLib.Inject.Emulator;
@@ -66,13 +67,13 @@ namespace CrowdControl.Games.Packs.Sonic3DBlast
                     new("Drop Flicky", "LoseFlicky")
                         { Price = 20, Description = "Force the player to drop a flicky." },
                     new("Shove North", "ShoveNorth")
-                        { Price = 10, Description = "Shove the player north." },
+                        { Price = 10, Description = "Shove the player up right." },
                     new("Shove West", "ShoveWest")
-                        { Price = 10, Description = "Shove the player west." },
+                        { Price = 10, Description = "Shove the player down right." },
                     new("Shove South", "ShoveSouth")
-                        { Price = 10, Description = "Shove the player south." },
+                        { Price = 10, Description = "Shove the player down left." },
                     new("Shove East", "ShoveEast")
-                        { Price = 10, Description = "Shove the player east." },
+                        { Price = 10, Description = "Shove the player up left." },
                     new("Launch", "Launch")
                         { Price = 20, Description = "Launch the player." },
                     new("Stop", "Stop")
@@ -123,12 +124,17 @@ namespace CrowdControl.Games.Packs.Sonic3DBlast
                             return GameState.Cutscene;
                         if (!Connector.IsEqual16(DirectorsCutAddresses.ADDR_PAUSE_STATE, 0))
                             return GameState.Paused;
-                        if (!Connector.IsEqual16(DirectorsCutAddresses.ADDR_LEVEL_CLEAR_SCREEN, 0))
+                        if (Connector.IsEqual16(DirectorsCutAddresses.ADDR_LEVEL_FLICKY_BONUS, 100) ||
+                            Connector.IsEqual16(DirectorsCutAddresses.ADDR_LEVEL_FLICKY_BONUS, 150))
                             return GameState.Loading;
                         if (!Connector.IsEqual16(DirectorsCutAddresses.ADDR_CURRENT_LEVEL, 0))
                         {
                             if (!Connector.Freeze16(DirectorsCutAddresses.ADDR_LIVES, 9))
                                 return GameState.Error;
+#if BETA
+                            if (!Connector.Freeze16(DirectorsCutAddresses.ADDR_LEVELSELECT_UNLOCKED, 1))
+                                return GameState.Error;
+#endif
                             return GameState.Ready;
                         }
                         return GameState.Loading;
@@ -142,12 +148,17 @@ namespace CrowdControl.Games.Packs.Sonic3DBlast
                             return GameState.Cutscene;
                         if (!Connector.IsEqual16(Sonic3DBlastAddresses.ADDR_PAUSE_STATE, 0))
                             return GameState.Paused;
-                        if (!Connector.IsEqual16(Sonic3DBlastAddresses.ADDR_LEVEL_CLEAR_SCREEN, 0))
+                        if (Connector.IsEqual16(Sonic3DBlastAddresses.ADDR_LEVEL_FLICKY_BONUS, 100) ||
+                            Connector.IsEqual16(Sonic3DBlastAddresses.ADDR_LEVEL_FLICKY_BONUS, 150))
                             return GameState.Loading;
                         if (!Connector.IsEqual16(Sonic3DBlastAddresses.ADDR_CURRENT_LEVEL, 0))
                         {
                             if (!Connector.Freeze16(Sonic3DBlastAddresses.ADDR_LIVES, 9))
                                 return GameState.Error;
+#if BETA
+                            if (!Connector.Freeze16(Sonic3DBlastAddresses.ADDR_LEVELSELECT_UNLOCKED, 1))
+                                return GameState.Error;
+#endif
                             return GameState.Ready;
                         }
                         return GameState.Loading;
@@ -172,6 +183,7 @@ namespace CrowdControl.Games.Packs.Sonic3DBlast
 
         public class Sonic3DBlastAddresses
         {
+            public const uint ADDR_LEVELSELECT_UNLOCKED = 0x00FF040C;
             public const uint ADDR_CURRENT_LEVEL = 0x00FF0678;
             public const uint ADDR_CURRENT_LEVEL_INDEX = 0x00FF067E;
             public const uint ADDR_IN_DEMO = 0x00FF0410;
@@ -190,7 +202,7 @@ namespace CrowdControl.Games.Packs.Sonic3DBlast
             public const uint ADDR_SOUND2 = 0x00FF0AC6;
             public const uint ADDR_CURRENT_BGM = 0x00FF0AC8;
             public const uint ADDR_PAUSE_STATE = 0x00FF0AE0;
-            public const uint ADDR_LEVEL_CLEAR_SCREEN = 0x00FF0B76;
+            public const uint ADDR_LEVEL_FLICKY_BONUS = 0x00FF0B76;
 
             public const uint ADDR_SONIC = 0x00FFC1E6;
             // position and velocity are 2.2 byte fixed point numbers
@@ -218,6 +230,7 @@ namespace CrowdControl.Games.Packs.Sonic3DBlast
 
         public class DirectorsCutAddresses
         {
+            public const uint ADDR_LEVELSELECT_UNLOCKED = 0x00FF040E;
             // has to be non-zero for DX exclusive effects
             public const uint ADDR_DX_ENABLED = 0x00FF0410;
 
@@ -239,7 +252,7 @@ namespace CrowdControl.Games.Packs.Sonic3DBlast
             public const uint ADDR_SOUND2 = 0x00FF0B30;
             public const uint ADDR_CURRENT_BGM = 0x00FF0B32;
             public const uint ADDR_PAUSE_STATE = 0x00FF0BB0;
-            public const uint ADDR_LEVEL_CLEAR_SCREEN = 0x00FF0C48;
+            public const uint ADDR_LEVEL_FLICKY_BONUS = 0x00FF0C48;
 
             public const uint ADDR_SONIC = 0x00FFC358;
             // position and velocity are 2.2 byte fixed point numbers

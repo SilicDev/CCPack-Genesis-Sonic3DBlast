@@ -8,7 +8,7 @@ public partial class Sonic3DBlast
     [EffectHandler("ShoveWest")]
     public class ShoveWest : EffectHandler<Sonic3DBlast, IGenesisConnector>
     {
-        public ShoveWest(Sonic3DBlast pack) : base(pack) { }
+        public ShoveWest(Sonic3DBlast pack) : base(pack) { } // top left
 
         public override EffectHandlerType Type => EffectHandlerType.Instant;
 
