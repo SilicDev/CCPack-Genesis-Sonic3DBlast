@@ -84,10 +84,8 @@ namespace CrowdControl.Games.Packs.Sonic3DBlast
                         { Price = 50, Duration = 15, Description = "Prevent the player from jumping." },
                     new("No Spin", "NoSpin")
                         { Price = 50, Duration = 15, Description = "Prevent the player from spindashing." },
-#if DEBUG
                     new("Freeze Player", "Freeze")
                         { Price = 75, Description = "Freeze the player." },
-#endif
                     /*new("Spawn Bumper", "Bumper")
                         { Price = 10, Description = "Spawns a bumper." },*/
                 ];
@@ -202,6 +200,7 @@ namespace CrowdControl.Games.Packs.Sonic3DBlast
             public const uint ADDR_SOUND2 = 0x00FF0AC6;
             public const uint ADDR_CURRENT_BGM = 0x00FF0AC8;
             public const uint ADDR_PAUSE_STATE = 0x00FF0AE0;
+            public const uint ADDR_LEVEL_DATA = 0x00FF0B6C;
             public const uint ADDR_LEVEL_FLICKY_BONUS = 0x00FF0B76;
 
             public const uint ADDR_SONIC = 0x00FFC1E6;
@@ -252,6 +251,7 @@ namespace CrowdControl.Games.Packs.Sonic3DBlast
             public const uint ADDR_SOUND2 = 0x00FF0B30;
             public const uint ADDR_CURRENT_BGM = 0x00FF0B32;
             public const uint ADDR_PAUSE_STATE = 0x00FF0BB0;
+            public const uint ADDR_LEVEL_DATA = 0x00FF0C3E;
             public const uint ADDR_LEVEL_FLICKY_BONUS = 0x00FF0C48;
 
             public const uint ADDR_SONIC = 0x00FFC358;
