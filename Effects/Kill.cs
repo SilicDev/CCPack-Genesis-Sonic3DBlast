@@ -14,7 +14,7 @@ public partial class Sonic3DBlast
 
         public override IList<string> Codes { get; } = new[] { "Kill" };
 
-        public override EffectPack.Mutex Mutexes { get; } = new[] { "live" };
+        public override EffectPack.Mutex Mutexes { get; } = new[] { "life" };
 
         public override bool StartCondition()
         {
@@ -32,6 +32,8 @@ public partial class Sonic3DBlast
             {
                 Connector.Read16(DirectorsCutAddresses.ADDR_RINGS, out ushort rings);
                 Connector.Write16(DirectorsCutAddresses.ADDR_RINGS, 0);
+                Connector.Read16(DirectorsCutAddresses.ADDR_FLICKIES_FOLLOWING, out ushort flicky);
+                Connector.Write16(DirectorsCutAddresses.ADDR_FLICKIES_FOLLOWING, 0);
                 Connector.Read16(DirectorsCutAddresses.ADDR_SONIC_INVINCIBILITY, out ushort invinc);
                 Connector.Write16(DirectorsCutAddresses.ADDR_SONIC_INVINCIBILITY, 0);
                 Connector.Read16(DirectorsCutAddresses.ADDR_SONIC_SPEED_SHOES, out ushort shoes);
@@ -39,6 +41,7 @@ public partial class Sonic3DBlast
                 bool success = Connector.Write16(DirectorsCutAddresses.ADDR_SHIELD, 0);
                 if (!success)
                 {
+                    Connector.Write16(DirectorsCutAddresses.ADDR_FLICKIES_FOLLOWING, flicky);
                     Connector.Write16(DirectorsCutAddresses.ADDR_SONIC_INVINCIBILITY, invinc);
                     Connector.Write16(DirectorsCutAddresses.ADDR_SONIC_SPEED_SHOES, shoes);
                     return ResetRings(rings);
