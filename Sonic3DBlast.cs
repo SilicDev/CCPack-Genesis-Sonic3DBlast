@@ -86,8 +86,8 @@ namespace CrowdControl.Games.Packs.Sonic3DBlast
                         { Price = 50, Duration = 15, Description = "Prevent the player from spindashing." },
                     new("Freeze Player", "Freeze")
                         { Price = 75, Description = "Freeze the player." },
-                    /*new("Spawn Bumper", "Bumper")
-                        { Price = 10, Description = "Spawns a bumper." },*/
+                    new("Spawn Bumper", "Bumper")
+                        { Price = 10, Description = "Spawns a bumper." },
                     new("Change Color: Blue", "ColorChangeBlue")
                         { Price = 5, Description = "Make the player blue. (Default colors)" },
                     new("Change Color: Red", "ColorChangeRed")
