@@ -95,8 +95,8 @@ public partial class Sonic3DBlast
                 Connector.Freeze16(DirectorsCutAddresses.ADDR_LEVEL_DATA + 0x12, ld_0x12);
                 while (frozen_hits > 0)
                 {
-                    Thread.Sleep(50);
                     Connector.Write16(DirectorsCutAddresses.ADDR_SONIC_ANIMATION, (short)SonicAnimations.FROZEN);
+                    Thread.Sleep(50);
                     Connector.Read16(DirectorsCutAddresses.ADDR_SONIC_FROZEN_HITS, out frozen_hits);
                 }
                 Connector.Unfreeze(DirectorsCutAddresses.ADDR_LEVEL_DATA + 0x0C);
@@ -121,8 +121,8 @@ public partial class Sonic3DBlast
                 Connector.Freeze16(Sonic3DBlastAddresses.ADDR_LEVEL_DATA + 0x12, ld_0x12);
                 while (frozen_hits > 0)
                 {
-                    Thread.Sleep(50);
                     Connector.Write16(Sonic3DBlastAddresses.ADDR_SONIC_ANIMATION, (short)SonicAnimations.FROZEN);
+                    Thread.Sleep(50);
                     Connector.Read16(Sonic3DBlastAddresses.ADDR_SONIC_FROZEN_HITS, out frozen_hits);
                 }
                 Connector.Unfreeze(Sonic3DBlastAddresses.ADDR_LEVEL_DATA + 0x0C);

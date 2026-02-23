@@ -30,10 +30,12 @@ namespace CrowdControl.Games.Packs.Sonic3DBlast
         {
             get
             {
+                
                 return new[]
                 {
                     new ROMInfo("Sonic 3D Blast (USA, Europe, Korea) (En).md", null, Patching.Ignore, ROMStatus.ValidPatched, s => Patching.MD5(s, "50ACBEA2461D179B2BF11460A1CC6409")),
                     new ROMInfo("Sonic 3D Blast - Director's Cut (World) (Unl).md", null, Patching.Ignore, ROMStatus.ValidPatched, s => Patching.MD5(s, "742DD5C98D143FF6716800DEE6A25DC5")),
+                    new ROMInfo("Sonic 3D Blast Practice ROM.md", null, Patching.Ignore, ROMStatus.NotSupported, s => Patching.MD5(s, "347F468FDB9576B85B074716BCB9C8DC")),
                 };
             }
         }
@@ -574,13 +576,11 @@ namespace CrowdControl.Games.Packs.Sonic3DBlast
             success &= Connector.Write16(object_ptr + 0x24, spawn_data.gravity);
             success &= Connector.Write16(object_ptr + 0x26, (ushort)((z & 0xFFE0) * 8 + (x & 0xFFE0) >> 4));
             success &= Connector.Write16(object_ptr + 0x28, 0);
-            success &= Connector.Write16(object_ptr + 0x2A, (ushort)(spawn_data.f_0x06 >> 16));
-            success &= Connector.Write16(object_ptr + 0x2C, (ushort)(spawn_data.f_0x06 & 0xFFFF));
+            success &= Connector.Write32(object_ptr + 0x2A, spawn_data.f_0x06);
             success &= Connector.Write16(object_ptr + 0x2E, spawn_data.sprite_flags);
             success &= Connector.Write16(object_ptr + 0x30, spawn_data.f_0x0A);
             success &= Connector.Write16(object_ptr + 0x32, spawn_data.lifetime);
-            success &= Connector.Write16(object_ptr + 0x34, (ushort)(spawn_data.f_0x0E >> 16));
-            success &= Connector.Write16(object_ptr + 0x36, (ushort)(spawn_data.f_0x0E & 0xFFFF));
+            success &= Connector.Write32(object_ptr + 0x34, spawn_data.f_0x0E);
             if (!success)
                 return 0xFFFFFFFF;
             return object_ptr;

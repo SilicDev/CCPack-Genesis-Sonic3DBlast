@@ -64,7 +64,15 @@ public partial class Sonic3DBlast
             },
         };
 
-        private List<uint> Bumpers = new List<uint>();
+        private List<BumperObj> Bumpers = new List<BumperObj>();
+
+        private struct BumperObj
+        {
+            public uint addr;
+            public short x;
+            public short y;
+            public short z;
+        }
 
         public override bool StartCondition()
         {
@@ -134,16 +142,27 @@ public partial class Sonic3DBlast
                 Connector.Read16(Sonic3DBlastAddresses.ADDR_SONIC_VELOCITY_Y, out vel_y);
                 Connector.Read16(Sonic3DBlastAddresses.ADDR_SONIC_VELOCITY_Z, out vel_z);
             }
+            short x_pos = (short)(x + vel_x);
+            short y_pos = (short)(y);
+            short z_pos = (short)(z + vel_z);
             uint object_ptr = EffectPack.CreateObjectAtXYZ(new SpawnData {
                 collide_flag = 0x0, // special collide if == 0xXX00
                 gravity = 0x0, // gravity
                 sprite_flags = 0xC7D0, // !ppv hxxx xxxx xxxx !=priority p=palette v=flip_v h=flip_h x=index
-                f_0x06 = 0xFFFF, // ---- ---- ---- ----
-                f_0x0A = 0x306,
+                f_0x06 = 0xFFFF, // ?--- ---- ---- ----
+                f_0x0A = 0x306, // ---- ---- ---- ---- can cause a sound? sprite changes?
                 lifetime = 600, // lifetime
                 f_0x0E = 0x60000, // ---- ---- ---- -??- ---- ---- ---- ---- 
-            }, (short)(x + vel_x), (short)(y + 0), (short)(z + vel_z));
-            Bumpers.Add(object_ptr);
+            }, x_pos, y_pos, z_pos);
+            Bumpers.Add(new BumperObj() { 
+                addr=object_ptr, 
+                x=x_pos,
+                y=y_pos,
+                z=z_pos,
+            });
+            Connector.Freeze16(object_ptr + 0x06, x);
+            Connector.Freeze16(object_ptr + 0x0A, y);
+            Connector.Freeze16(object_ptr + 0x0E, z);
             return true;
         }
 
@@ -154,15 +173,20 @@ public partial class Sonic3DBlast
                 List<int> to_remove = new List<int>();
                 for (int i = 0; i < Bumpers.Count; i++)
                 {
-                    Connector.Read16(Bumpers[i] + 0x32, out short lifetime);
+                    uint addr = Bumpers[i].addr;
+                    short x = Bumpers[i].x;
+                    short y = Bumpers[i].y;
+                    short z = Bumpers[i].z;
+                    Connector.Read16(addr + 0x32, out short lifetime);
                     if (lifetime == 0)
                     {
                         to_remove.Add(i);
+                        Connector.Unfreeze(addr + 0x06);
+                        Connector.Write32(addr + 0x06, 0);
+                        Connector.Unfreeze(addr + 0x0A);
+                        Connector.Unfreeze(addr + 0x0E);
                         continue;
                     }
-                    Connector.Read16(Bumpers[i] + 0x06, out short x);
-                    Connector.Read16(Bumpers[i] + 0x0a, out short y);
-                    Connector.Read16(Bumpers[i] + 0x0e, out short z);
                     short s_x = 0;
                     short s_y = 0;
                     short s_z = 0;
