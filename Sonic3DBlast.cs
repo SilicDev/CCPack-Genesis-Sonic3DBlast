@@ -88,6 +88,22 @@ namespace CrowdControl.Games.Packs.Sonic3DBlast
                         { Price = 75, Description = "Freeze the player." },
                     /*new("Spawn Bumper", "Bumper")
                         { Price = 10, Description = "Spawns a bumper." },*/
+                    new("Change Color: Blue", "ColorChangeBlue")
+                        { Price = 5, Description = "Make the player blue. (Default colors)" },
+                    new("Change Color: Red", "ColorChangeRed")
+                        { Price = 5, Description = "Make the player red." },
+                    new("Change Color: Green", "ColorChangeGreen")
+                        { Price = 5, Description = "Make the player green." },
+                    new("Change Color: Light Blue", "ColorChangeLightBlue")
+                        { Price = 5, Description = "Make the player light blue. (Director's cut inspired)" },
+                    new("Change Color: Yellow", "ColorChangeYellow")
+                        { Price = 5, Description = "Make the player yellow." },
+                    new("Change Color: Purple", "ColorChangePurple")
+                        { Price = 5, Description = "Make the player purple." },
+                    new("Change Color: Orange", "ColorChangeOrange")
+                        { Price = 5, Description = "Make the player orange." },
+                    new("Change Color: Pink", "ColorChangePink")
+                        { Price = 5, Description = "Make the player pink." },
                 ];
                 return effects;
             }
@@ -190,6 +206,8 @@ namespace CrowdControl.Games.Packs.Sonic3DBlast
             public const uint ADDR_CONTROLS_OVERRIDDEN_BACKUP = 0x00FF06BA;
             public const uint ADDR_FORCED_CONTROLS_TIMER = 0x00FF0A18;
             public const uint ADDR_FORCED_CONTROLS = 0x00FF0A1A;
+            public const uint ADDR_VDP_CONTROL_PROXY = 0x00FF0A32;
+            public const uint ADDR_VDP_DATA_PROXY = 0x00FF0A34;
             public const uint ADDR_RINGS_HUD = 0x00FF0A56;
             public const uint ADDR_MONITOR_EFFECT = 0x00FF0A86;
             public const uint ADDR_RINGS = 0x00FF0A5A;
@@ -242,6 +260,8 @@ namespace CrowdControl.Games.Packs.Sonic3DBlast
             public const uint ADDR_CONTROLS_OVERRIDDEN_BACKUP = 0x00FF03BF;
             public const uint ADDR_FORCED_CONTROLS_TIMER = 0x00FF0A60;
             public const uint ADDR_FORCED_CONTROLS = 0x00FF0A62;
+            public const uint ADDR_VDP_CONTROL_PROXY = 0x00FF0A7A;
+            public const uint ADDR_VDP_DATA_PROXY = 0x00FF0A7C;
             public const uint ADDR_RINGS_HUD = 0x00FF0A9E; // Hex index per digit
             public const uint ADDR_MONITOR_EFFECT = 0x00FF0AF0;
             public const uint ADDR_RINGS = 0x00FF0AA2;
