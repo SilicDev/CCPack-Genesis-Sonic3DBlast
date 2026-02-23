@@ -221,6 +221,7 @@ namespace CrowdControl.Games.Packs.Sonic3DBlast
             public const uint ADDR_SONIC_FLOOR_HEIGHT = 0x00FFC232;
             public const uint ADDR_SONIC_INVINCIBILITY = 0x00FFC262;
             public const uint ADDR_SONIC_SPEED_SHOES = 0x00FFC264;
+            public const uint ADDR_SONIC_FROZEN_HITS = 0x00FFC26E;
             public const uint ADDR_SONIC_ANIMATION = 0x00FFC27A;
 
             public const uint ADDR_OBJECT_OFFSET = 0x00FFC28C;
@@ -272,6 +273,7 @@ namespace CrowdControl.Games.Packs.Sonic3DBlast
             public const uint ADDR_SONIC_FLOOR_HEIGHT = 0x00FFC3A4;
             public const uint ADDR_SONIC_INVINCIBILITY = 0x00FFC3D4;
             public const uint ADDR_SONIC_SPEED_SHOES = 0x00FFC3D6;
+            public const uint ADDR_SONIC_FROZEN_HITS = 0x00FFC3E0;
             public const uint ADDR_SONIC_ANIMATION = 0x00FFC3EE;
 
             public const uint ADDR_OBJECT_OFFSET = 0x00FFC400;
@@ -442,6 +444,7 @@ namespace CrowdControl.Games.Packs.Sonic3DBlast
             SFX_MENU_TICK = 0x5B,
             SFX_JUMP = 0x62,
             SFX_WOOSH = 0x66,
+            SFX_CONTINUE_GET = 0x68,
             SFX_WARP = 0x6A,
             SFX_FREEZE = 0x80,
             SFX_CHAIN = 0x94,

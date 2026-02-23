@@ -17,7 +17,7 @@ public partial class Sonic3DBlast
 
         public override EffectPack.Mutex Mutexes { get; } = new[] { "sonic" };
 
-        public override SITimeSpan FollowUpDelay => SITimeSpan.FromSeconds(0.5);
+        public override SITimeSpan FollowUpDelay => SITimeSpan.FromSeconds(2.5);
 
         public override bool StartAction()
         {

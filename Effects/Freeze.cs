@@ -56,14 +56,14 @@ public partial class Sonic3DBlast
             new Task(FreezeFix).Start();
             if (EffectPack.rom_type == ROMType.DIRECTORS_CUT)
             {
-                bool success = Connector.Write16(DirectorsCutAddresses.ADDR_SONIC + 0x88, 4);
+                bool success = Connector.Write16(DirectorsCutAddresses.ADDR_SONIC_FROZEN_HITS, 4);
                 success &= Connector.Write16(DirectorsCutAddresses.ADDR_SONIC + 0x8E, 1);
                 success &= Connector.Write16(DirectorsCutAddresses.ADDR_SOUND1, (ushort)Sounds.SFX_FREEZE);
                 return success & Connector.Write16(DirectorsCutAddresses.ADDR_SONIC_ANIMATION, (short)SonicAnimations.FROZEN);
             }
             else
             {
-                bool success = Connector.Write16(Sonic3DBlastAddresses.ADDR_SONIC + 0x88, 4);
+                bool success = Connector.Write16(Sonic3DBlastAddresses.ADDR_SONIC_FROZEN_HITS, 4);
                 success &= Connector.Write16(Sonic3DBlastAddresses.ADDR_SONIC + 0x8E, 1);
                 success &= Connector.Write16(Sonic3DBlastAddresses.ADDR_SOUND1, (ushort)Sounds.SFX_FREEZE);
                 return success & Connector.Write16(Sonic3DBlastAddresses.ADDR_SONIC_ANIMATION, (short)SonicAnimations.FROZEN);
@@ -72,7 +72,7 @@ public partial class Sonic3DBlast
 
         private void FreezeFix()
         {
-            ushort anim = 0;
+            ushort frozen_hits = 0;
             short level = 0;
             ushort ld_0x0C;
             ushort ld_0x10;
@@ -82,7 +82,7 @@ public partial class Sonic3DBlast
             if (EffectPack.rom_type == ROMType.DIRECTORS_CUT)
             {
                 Connector.Read16(DirectorsCutAddresses.ADDR_CURRENT_LEVEL_INDEX, out level);
-                Connector.Read16(DirectorsCutAddresses.ADDR_SONIC_ANIMATION, out anim);
+                Connector.Read16(DirectorsCutAddresses.ADDR_SONIC_FROZEN_HITS, out frozen_hits);
                 Connector.Read16(DirectorsCutAddresses.ADDR_LEVEL_DATA + 0x0C, out ld_0x0C);
                 Connector.Read16(DirectorsCutAddresses.ADDR_LEVEL_DATA + 0x10, out ld_0x10);
                 Connector.Read16(DirectorsCutAddresses.ADDR_LEVEL_DATA + 0x0E, out ld_0x0E);
@@ -93,10 +93,11 @@ public partial class Sonic3DBlast
                 Connector.Freeze16(DirectorsCutAddresses.ADDR_LEVEL_DATA + 0x0E, ld_0x0E);
                 Connector.Freeze16(DirectorsCutAddresses.ADDR_LEVEL_DATA + 0x0A, ld_0x0A);
                 Connector.Freeze16(DirectorsCutAddresses.ADDR_LEVEL_DATA + 0x12, ld_0x12);
-                while (anim == (ushort)SonicAnimations.FROZEN)
+                while (frozen_hits > 0)
                 {
                     Thread.Sleep(50);
-                    Connector.Read16(DirectorsCutAddresses.ADDR_SONIC_ANIMATION, out anim);
+                    Connector.Write16(DirectorsCutAddresses.ADDR_SONIC_ANIMATION, (short)SonicAnimations.FROZEN);
+                    Connector.Read16(DirectorsCutAddresses.ADDR_SONIC_FROZEN_HITS, out frozen_hits);
                 }
                 Connector.Unfreeze(DirectorsCutAddresses.ADDR_LEVEL_DATA + 0x0C);
                 Connector.Unfreeze(DirectorsCutAddresses.ADDR_LEVEL_DATA + 0x10);
@@ -107,7 +108,7 @@ public partial class Sonic3DBlast
             else
             {
                 Connector.Read16(Sonic3DBlastAddresses.ADDR_CURRENT_LEVEL_INDEX, out level);
-                Connector.Read16(Sonic3DBlastAddresses.ADDR_SONIC_ANIMATION, out anim);
+                Connector.Read16(Sonic3DBlastAddresses.ADDR_SONIC_FROZEN_HITS, out frozen_hits);
                 Connector.Read16(Sonic3DBlastAddresses.ADDR_LEVEL_DATA + 0x0C, out ld_0x0C);
                 Connector.Read16(Sonic3DBlastAddresses.ADDR_LEVEL_DATA + 0x10, out ld_0x10);
                 Connector.Read16(Sonic3DBlastAddresses.ADDR_LEVEL_DATA + 0x0E, out ld_0x0E);
@@ -118,10 +119,11 @@ public partial class Sonic3DBlast
                 Connector.Freeze16(Sonic3DBlastAddresses.ADDR_LEVEL_DATA + 0x0E, ld_0x0E);
                 Connector.Freeze16(Sonic3DBlastAddresses.ADDR_LEVEL_DATA + 0x0A, ld_0x0A);
                 Connector.Freeze16(Sonic3DBlastAddresses.ADDR_LEVEL_DATA + 0x12, ld_0x12);
-                while (anim == (ushort)SonicAnimations.FROZEN)
+                while (frozen_hits > 0)
                 {
                     Thread.Sleep(50);
-                    Connector.Read16(Sonic3DBlastAddresses.ADDR_SONIC_ANIMATION, out anim);
+                    Connector.Write16(Sonic3DBlastAddresses.ADDR_SONIC_ANIMATION, (short)SonicAnimations.FROZEN);
+                    Connector.Read16(Sonic3DBlastAddresses.ADDR_SONIC_FROZEN_HITS, out frozen_hits);
                 }
                 Connector.Unfreeze(Sonic3DBlastAddresses.ADDR_LEVEL_DATA + 0x0C);
                 Connector.Unfreeze(Sonic3DBlastAddresses.ADDR_LEVEL_DATA + 0x10);
