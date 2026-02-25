@@ -32,7 +32,7 @@ public partial class Sonic3DBlast
             else
                 Connector.Read16(Sonic3DBlastAddresses.ADDR_CURRENT_LEVEL_INDEX, out level);
             Log.Message($"Level: {level}");
-            return !(level % 3 == 0 || level == 0x16);
+            return !(level % 3 == 0 || level == 0x16 || level >= 0x13);
 #endif
         }
 
@@ -104,6 +104,7 @@ public partial class Sonic3DBlast
                 Connector.Unfreeze(DirectorsCutAddresses.ADDR_LEVEL_DATA + 0x0E);
                 Connector.Unfreeze(DirectorsCutAddresses.ADDR_LEVEL_DATA + 0x0A);
                 Connector.Unfreeze(DirectorsCutAddresses.ADDR_LEVEL_DATA + 0x12);
+                Connector.Write16(DirectorsCutAddresses.ADDR_SONIC_ANIMATION, (short)SonicAnimations.IDLE);
             }
             else
             {
@@ -130,6 +131,7 @@ public partial class Sonic3DBlast
                 Connector.Unfreeze(Sonic3DBlastAddresses.ADDR_LEVEL_DATA + 0x0E);
                 Connector.Unfreeze(Sonic3DBlastAddresses.ADDR_LEVEL_DATA + 0x0A);
                 Connector.Unfreeze(Sonic3DBlastAddresses.ADDR_LEVEL_DATA + 0x12);
+                Connector.Write16(Sonic3DBlastAddresses.ADDR_SONIC_ANIMATION, (short)SonicAnimations.IDLE);
             }
         }
     }

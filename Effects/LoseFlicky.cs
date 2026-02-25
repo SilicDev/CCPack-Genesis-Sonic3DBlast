@@ -22,24 +22,31 @@ public partial class Sonic3DBlast
 
         private bool IsValidLevel()
         {
-#if DEBUG
-            return true;
-#else
+#if !DEBUG
             short level = 0;
             if (EffectPack.rom_type == ROMType.DIRECTORS_CUT)
                 Connector.Read16(DirectorsCutAddresses.ADDR_CURRENT_LEVEL_INDEX, out level);
             else
                 Connector.Read16(Sonic3DBlastAddresses.ADDR_CURRENT_LEVEL_INDEX, out level);
             Log.Message($"Level: {level}");
-            return !(level % 3 == 0 || level >= 0x14);
+            if (level % 3 == 0 || level >= 0x14)
+            {
+                EffectPack.Respond(Request, EffectStatus.FailTemporary, "No Flickies in this level!");
+                return false;
+            }
+            /*if (level >= 0x11)
+            {
+                EffectPack.Respond(Request, EffectStatus.FailTemporary, "Flickies easily get permanently lost in GeGa!");
+                return false;
+            }*/
 #endif
+            return true;
         }
 
         public override bool StartCondition()
         {
             if (!IsValidLevel())
             {
-                EffectPack.Respond(Request, EffectStatus.FailTemporary, "No Flickies in this level!");
                 return false;
             }
             if (EffectPack.rom_type == ROMType.DIRECTORS_CUT)
@@ -51,7 +58,8 @@ public partial class Sonic3DBlast
                     return false;
                 success &= Connector.Read16(DirectorsCutAddresses.ADDR_FLICKIES_FOLLOWING, out ushort flickies_follow);
                 success &= Connector.Read16(DirectorsCutAddresses.ADDR_FLICKIES_SCATTER, out ushort flickies);
-                return success & flickies_follow > 0 && flickies == 0;
+                success &= Connector.Read16(DirectorsCutAddresses.ADDR_SONIC_FLOOR_HEIGHT, out short floor);
+                return success & flickies_follow > 0 && flickies == 0 && floor != -1;
             }
             else
             {
@@ -62,7 +70,8 @@ public partial class Sonic3DBlast
                     return false;
                 success &= Connector.Read16(Sonic3DBlastAddresses.ADDR_FLICKIES_FOLLOWING, out ushort flickies_follow);
                 success &= Connector.Read16(Sonic3DBlastAddresses.ADDR_FLICKIES_SCATTER, out ushort flickies);
-                return success & flickies_follow > 0 && flickies == 0;
+                success &= Connector.Read16(Sonic3DBlastAddresses.ADDR_SONIC_FLOOR_HEIGHT, out short floor);
+                return success & flickies_follow > 0 && flickies == 0 && floor != -1;
             }
         }
 
