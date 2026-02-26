@@ -143,6 +143,8 @@ namespace CrowdControl.Games.Packs.Sonic3DBlast
                         if (Connector.IsEqual16(DirectorsCutAddresses.ADDR_LEVEL_FLICKY_BONUS, 100) ||
                             Connector.IsEqual16(DirectorsCutAddresses.ADDR_LEVEL_FLICKY_BONUS, 150))
                             return GameState.Loading;
+                        if (Connector.IsEqual16(DirectorsCutAddresses.ADDR_SONIC_FLOOR_HEIGHT, -1))
+                            return GameState.SafeArea;
                         if (!Connector.IsEqual16(DirectorsCutAddresses.ADDR_CURRENT_LEVEL, 0))
                         {
                             if (!Connector.Freeze16(DirectorsCutAddresses.ADDR_LIVES, 9))
@@ -167,6 +169,8 @@ namespace CrowdControl.Games.Packs.Sonic3DBlast
                         if (Connector.IsEqual16(Sonic3DBlastAddresses.ADDR_LEVEL_FLICKY_BONUS, 100) ||
                             Connector.IsEqual16(Sonic3DBlastAddresses.ADDR_LEVEL_FLICKY_BONUS, 150))
                             return GameState.Loading;
+                        if (Connector.IsEqual16(Sonic3DBlastAddresses.ADDR_SONIC_FLOOR_HEIGHT, -1))
+                            return GameState.SafeArea;
                         if (!Connector.IsEqual16(Sonic3DBlastAddresses.ADDR_CURRENT_LEVEL, 0))
                         {
                             if (!Connector.Freeze16(Sonic3DBlastAddresses.ADDR_LIVES, 9))
