@@ -19,9 +19,19 @@ public partial class Sonic3DBlast
         public override bool StartAction()
         {
             if (EffectPack.rom_type == ROMType.DIRECTORS_CUT)
-                return Connector.Write16(DirectorsCutAddresses.ADDR_SONIC_VELOCITY_X, 0xFF9C);
+            {
+                if (EffectPack.IsSpecialStage())
+                    return Connector.Write16(DirectorsCutAddresses.ADDR_SPECIAL_STAGE_VELOCITY_X, 0xFF9C);
+                else
+                    return Connector.Write16(DirectorsCutAddresses.ADDR_SONIC_VELOCITY_X, 0xFF9C);
+            }
             else
-                return Connector.Write16(Sonic3DBlastAddresses.ADDR_SONIC_VELOCITY_X, 0xFF9C);
+            {
+                if (EffectPack.IsSpecialStage())
+                    return Connector.Write16(Sonic3DBlastAddresses.ADDR_SPECIAL_STAGE_VELOCITY_X, 0xFF9C);
+                else
+                    return Connector.Write16(Sonic3DBlastAddresses.ADDR_SONIC_VELOCITY_X, 0xFF9C);
+            }
         }
     }
 }

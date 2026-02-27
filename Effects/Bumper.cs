@@ -76,6 +76,11 @@ public partial class Sonic3DBlast
 
         public override bool StartCondition()
         {
+            if (EffectPack.IsSpecialStage())
+            {
+                EffectPack.Respond(Request, EffectStatus.FailTemporary, "No bumpers in special stages!");
+                return false;
+            }
             short anim = 0;
             if (EffectPack.rom_type == ROMType.DIRECTORS_CUT)
                 Connector.Read16(DirectorsCutAddresses.ADDR_SONIC_ANIMATION, out anim);

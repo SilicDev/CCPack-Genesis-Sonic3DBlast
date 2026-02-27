@@ -32,11 +32,15 @@ public partial class Sonic3DBlast
             if (EffectPack.rom_type == ROMType.DIRECTORS_CUT)
             {
                 bool success = Connector.Read16(DirectorsCutAddresses.ADDR_CURRENT_BGM, out ushort bgm);
+                if (EffectPack.IsSpecialStage())
+                    bgm = (byte)Sounds.BGM_SS;
                 return success & Connector.Write16(DirectorsCutAddresses.ADDR_SOUND2, bgm);
             }
             else
             {
                 bool success = Connector.Read8(Sonic3DBlastAddresses.ADDR_CURRENT_BGM, out byte bgm);
+                if (EffectPack.IsSpecialStage())
+                    bgm = (byte)Sounds.BGM_SS;
                 return success & Connector.Write16(Sonic3DBlastAddresses.ADDR_SOUND2, bgm);
             }
         }

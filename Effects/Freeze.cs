@@ -23,6 +23,11 @@ public partial class Sonic3DBlast
 
         private bool IsValidLevel()
         {
+            if (EffectPack.IsSpecialStage())
+            {
+                EffectPack.Respond(Request, EffectStatus.FailTemporary, "Unavailable in special stages!");
+                return false;
+            }
 #if DEBUG
             return true;
 #else

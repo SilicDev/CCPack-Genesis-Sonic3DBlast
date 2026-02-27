@@ -47,15 +47,15 @@ namespace CrowdControl.Games.Packs.Sonic3DBlast
                 List<Effect> effects =
                 [
                     new("Give Ring", "AddRing")
-                        { Price = 1, Description = "Give the player a ring." },
+                        { Price = 1, Description = "Give the player a ring.", Group = new[]{ "special_stage" } },
                     new("Take Ring", "TakeRing")
-                        { Price = 2, Description = "Take a ring from the player" },
+                        { Price = 2, Description = "Take a ring from the player", Group = new[]{ "special_stage" } },
                     new("Slap", "Slap")
                         { Price = 5, Description = "Give the player a nice Slap." },
                     new("Kill", "Kill")
                         { Price = 100, Description = "Kills the player." },
                     new("SEGA!", "SEGA")
-                        { Price = 10, SessionCooldown = 10, Description = "SEGA!" },
+                        { Price = 10, SessionCooldown = 10, Description = "SEGA!", Group = new[]{ "special_stage" } },
                     new("Give Shield", "Shield")
                         { Price = 10, Description = "Gives A Shield to the player." },
                     new("Give Yellow Shield", "YellowShield")
@@ -71,19 +71,19 @@ namespace CrowdControl.Games.Packs.Sonic3DBlast
                     new("Shove North", "ShoveNorth")
                         { Price = 10, Description = "Shove the player up right." },
                     new("Shove West", "ShoveWest")
-                        { Price = 10, Description = "Shove the player down right." },
+                        { Price = 10, Description = "Shove the player down right.", Group = new[]{ "special_stage" } },
                     new("Shove South", "ShoveSouth")
                         { Price = 10, Description = "Shove the player down left." },
                     new("Shove East", "ShoveEast")
-                        { Price = 10, Description = "Shove the player up left." },
+                        { Price = 10, Description = "Shove the player up left.", Group = new[]{ "special_stage" } },
                     new("Launch", "Launch")
                         { Price = 20, Description = "Launch the player." },
                     new("Stop", "Stop")
                         { Price = 25, Description = "Stop the player for a moment." },
                     new("Invert Controls", "InvertControls")
-                        { Price = 50, Duration = 15, Description = "Invert the players controls." },
+                        { Price = 50, Duration = 15, Description = "Invert the players controls.", Group = new[]{ "special_stage" } },
                     new("No Jump", "NoJump")
-                        { Price = 50, Duration = 15, Description = "Prevent the player from jumping." },
+                        { Price = 50, Duration = 15, Description = "Prevent the player from jumping.", Group = new[]{ "special_stage" } },
                     new("No Spin", "NoSpin")
                         { Price = 50, Duration = 15, Description = "Prevent the player from spindashing." },
                     new("Freeze Player", "Freeze")
@@ -91,21 +91,21 @@ namespace CrowdControl.Games.Packs.Sonic3DBlast
                     new("Spawn Bumper", "Bumper")
                         { Price = 10, Description = "Spawns a bumper." },
                     new("Change Color: Blue", "ColorChangeBlue")
-                        { Price = 5, Description = "Make the player blue. (Default colors)" },
+                        { Price = 5, Description = "Make the player blue. (Default colors)", Group = new[]{ "special_stage", "color_change" } },
                     new("Change Color: Red", "ColorChangeRed")
-                        { Price = 5, Description = "Make the player red." },
+                        { Price = 5, Description = "Make the player red.", Group = new[]{ "special_stage", "color_change" } },
                     new("Change Color: Green", "ColorChangeGreen")
-                        { Price = 5, Description = "Make the player green." },
+                        { Price = 5, Description = "Make the player green.", Group = new[]{ "special_stage", "color_change" } },
                     new("Change Color: Light Blue", "ColorChangeLightBlue")
-                        { Price = 5, Description = "Make the player light blue. (Director's cut inspired)" },
+                        { Price = 5, Description = "Make the player light blue. (Director's cut inspired)", Group = new[]{ "special_stage", "color_change" } },
                     new("Change Color: Yellow", "ColorChangeYellow")
-                        { Price = 5, Description = "Make the player yellow." },
+                        { Price = 5, Description = "Make the player yellow.", Group = new[]{ "special_stage", "color_change" } },
                     new("Change Color: Purple", "ColorChangePurple")
-                        { Price = 5, Description = "Make the player purple." },
+                        { Price = 5, Description = "Make the player purple.", Group = new[]{ "special_stage", "color_change" } },
                     new("Change Color: Orange", "ColorChangeOrange")
-                        { Price = 5, Description = "Make the player orange." },
+                        { Price = 5, Description = "Make the player orange.", Group = new[]{ "special_stage", "color_change" } },
                     new("Change Color: Pink", "ColorChangePink")
-                        { Price = 5, Description = "Make the player pink." },
+                        { Price = 5, Description = "Make the player pink.", Group = new[]{ "special_stage", "color_change" } },
                 ];
                 return effects;
             }
@@ -134,8 +134,6 @@ namespace CrowdControl.Games.Packs.Sonic3DBlast
             {
                 case ROMType.DIRECTORS_CUT:
                     {
-                        if (!Connector.IsEqual16(DirectorsCutAddresses.ADDR_SPECIAL_STAGE_FLAG, 0))
-                            return GameState.WrongMode;
                         if (!Connector.IsEqual16(DirectorsCutAddresses.ADDR_IN_DEMO, 0))
                             return GameState.Cutscene;
                         if (!Connector.IsEqual16(DirectorsCutAddresses.ADDR_PAUSE_STATE, 0))
@@ -155,13 +153,13 @@ namespace CrowdControl.Games.Packs.Sonic3DBlast
 #endif
                             return GameState.Ready;
                         }
+                        if (IsSpecialStage())
+                            return GameState.Ready;
                         return GameState.Loading;
                     }
                 case ROMType.UNKNOWN:
                 case ROMType.DEFAULT:
                     {
-                        if (!Connector.IsEqual16(Sonic3DBlastAddresses.ADDR_SPECIAL_STAGE_FLAG, 0))
-                            return GameState.WrongMode;
                         if (!Connector.IsEqual16(Sonic3DBlastAddresses.ADDR_IN_DEMO, 0))
                             return GameState.Cutscene;
                         if (!Connector.IsEqual16(Sonic3DBlastAddresses.ADDR_PAUSE_STATE, 0))
@@ -181,6 +179,8 @@ namespace CrowdControl.Games.Packs.Sonic3DBlast
 #endif
                             return GameState.Ready;
                         }
+                        if (IsSpecialStage()) 
+                            return GameState.Ready;
                         return GameState.Loading;
                     }
             }
@@ -250,6 +250,17 @@ namespace CrowdControl.Games.Packs.Sonic3DBlast
 
             public const uint ADDR_OBJECT_OFFSET = 0x00FFC28C;
             public const uint ADDR_NEXT_OBJECT = 0x00FF0AAE;
+
+            public const uint ADDR_SPECIAL_STAGE_RING_UPDATE_FLAG = 0x00FFA170;
+            public const uint ADDR_SPECIAL_STAGE_RINGS = 0x00FFA17A;
+            public const uint ADDR_SPECIAL_STAGE_HURT_FRAMES = 0x00FFA1FE;
+            public const uint ADDR_SPECIAL_STAGE_ON_GROUND = 0x00FFA20E;
+            public const uint ADDR_SPECIAL_STAGE_POSITION_X = 0x00FFA210;
+            public const uint ADDR_SPECIAL_STAGE_POSITION_Y = 0x00FFA214;
+            public const uint ADDR_SPECIAL_STAGE_POSITION_Z = 0x00FFA218;
+            public const uint ADDR_SPECIAL_STAGE_VELOCITY_X = 0x00FFA222;
+            public const uint ADDR_SPECIAL_STAGE_VELOCITY_Y = 0x00FFA226;
+            public const uint ADDR_SPECIAL_STAGE_VELOCITY_Z = 0x00FFA23A;
         }
 
         public class DirectorsCutAddresses
@@ -304,6 +315,17 @@ namespace CrowdControl.Games.Packs.Sonic3DBlast
 
             public const uint ADDR_OBJECT_OFFSET = 0x00FFC400;
             public const uint ADDR_NEXT_OBJECT = 0x00FF0B18;
+
+            public const uint ADDR_SPECIAL_STAGE_RING_UPDATE_FLAG = 0x00FFA242;
+            public const uint ADDR_SPECIAL_STAGE_RINGS = 0x00FFA24C;
+            public const uint ADDR_SPECIAL_STAGE_HURT_FRAMES = 0x00FFA2D0;
+            public const uint ADDR_SPECIAL_STAGE_ON_GROUND = 0x00FFA2E0;
+            public const uint ADDR_SPECIAL_STAGE_POSITION_X = 0x00FFA2E2;
+            public const uint ADDR_SPECIAL_STAGE_POSITION_Y = 0x00FFA2E6;
+            public const uint ADDR_SPECIAL_STAGE_POSITION_Z = 0x00FFA2EA;
+            public const uint ADDR_SPECIAL_STAGE_VELOCITY_X = 0x00FFA2F4;
+            public const uint ADDR_SPECIAL_STAGE_VELOCITY_Y = 0x00FFA2F8;
+            public const uint ADDR_SPECIAL_STAGE_VELOCITY_Z = 0x00FFA2FC;
         }
 
         enum ROMType : byte
@@ -519,6 +541,15 @@ namespace CrowdControl.Games.Packs.Sonic3DBlast
             catch { success = false; }
             return success;
         }
+        public bool IsSpecialStage()
+        {
+            if (rom_type == ROMType.DIRECTORS_CUT)
+                return !Connector.IsEqual16(DirectorsCutAddresses.ADDR_SPECIAL_STAGE_FLAG, 0);
+            else
+                return !Connector.IsEqual16(Sonic3DBlastAddresses.ADDR_SPECIAL_STAGE_FLAG, 0);
+        }
+
+        #region TranslatedFunctions
 
         public struct SpawnData
         {
@@ -589,5 +620,6 @@ namespace CrowdControl.Games.Packs.Sonic3DBlast
                 return 0xFFFFFFFF;
             return object_ptr;
         }
+        #endregion
     }
 }

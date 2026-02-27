@@ -12,6 +12,16 @@ public partial class Sonic3DBlast
 
         public override IList<string> Codes { get; } = new[] { "NoSpin" };
 
+        public override bool StartCondition()
+        {
+            if (EffectPack.IsSpecialStage())
+            {
+                EffectPack.Respond(Request, EffectStatus.FailTemporary, "Unavailable in special stages!");
+                return false;
+            }
+            return base.StartCondition();
+        }
+
         public override bool StartAction()
         {
             if ((EffectPack.controlOverrides & ControlOverrides.NO_SPIN) != ControlOverrides.NONE)

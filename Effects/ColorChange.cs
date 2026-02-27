@@ -16,6 +16,16 @@ public partial class Sonic3DBlast
 
         public virtual ushort[] Colors { get; } = [0,0,0,0,0,0];
 
+        public override bool StartCondition()
+        {
+            if (EffectPack.IsSpecialStage())
+            {
+                EffectPack.Respond(Request, EffectStatus.FailTemporary, "Unavailable in special stages!");
+                return false;
+            }
+            return base.StartCondition();
+        }
+
 
         public override bool StartAction()
         {

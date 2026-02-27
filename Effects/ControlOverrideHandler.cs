@@ -19,8 +19,6 @@ public partial class Sonic3DBlast
             {
                 if (!Connector.IsEqual16(DirectorsCutAddresses.ADDR_PAUSE_STATE, 0))
                     return false;
-                if (!Connector.IsEqual16(DirectorsCutAddresses.ADDR_SPECIAL_STAGE_FLAG, 0))
-                    return false;
                 if (Connector.IsEqual16(DirectorsCutAddresses.ADDR_LEVEL_FLICKY_BONUS, 100) ||
                         Connector.IsEqual16(DirectorsCutAddresses.ADDR_LEVEL_FLICKY_BONUS, 150))
                     return false;
@@ -28,8 +26,6 @@ public partial class Sonic3DBlast
             else
             {
                 if (!Connector.IsEqual16(Sonic3DBlastAddresses.ADDR_PAUSE_STATE, 0))
-                    return false;
-                if (!Connector.IsEqual16(Sonic3DBlastAddresses.ADDR_SPECIAL_STAGE_FLAG, 0))
                     return false;
                 if (Connector.IsEqual16(DirectorsCutAddresses.ADDR_LEVEL_FLICKY_BONUS, 100) ||
                         Connector.IsEqual16(DirectorsCutAddresses.ADDR_LEVEL_FLICKY_BONUS, 150))
@@ -70,6 +66,10 @@ public partial class Sonic3DBlast
             if ((EffectPack.controlOverrides & ControlOverrides.NO_JUMP) != ControlOverrides.NONE)
             {
                 out_buttons |= Buttons.BUTTON_A | Buttons.BUTTON_C;
+                if (EffectPack.IsSpecialStage())
+                {
+                    out_buttons |= Buttons.BUTTON_B;
+                }
             }
             if ((EffectPack.controlOverrides & ControlOverrides.NO_SPIN) != ControlOverrides.NONE)
             {

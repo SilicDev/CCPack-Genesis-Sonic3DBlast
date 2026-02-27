@@ -23,6 +23,11 @@ public partial class Sonic3DBlast
         private bool IsValidLevel()
         {
 #if !DEBUG
+            if (EffectPack.IsSpecialStage())
+            {
+                EffectPack.Respond(Request, EffectStatus.FailTemporary, "No flickies in special stages!");
+                return false;
+            }
             short level = 0;
             if (EffectPack.rom_type == ROMType.DIRECTORS_CUT)
                 Connector.Read16(DirectorsCutAddresses.ADDR_CURRENT_LEVEL_INDEX, out level);
