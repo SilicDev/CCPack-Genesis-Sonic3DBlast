@@ -54,6 +54,10 @@ public partial class Sonic3DBlast
             {
                 return false;
             }
+            if (EffectPack.IsOoB())
+            {
+                return false;
+            }
             if (EffectPack.rom_type == ROMType.DIRECTORS_CUT)
             {
                 bool success = Connector.Read16(DirectorsCutAddresses.ADDR_SONIC_ANIMATION, out ushort anim);

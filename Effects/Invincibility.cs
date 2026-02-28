@@ -23,6 +23,10 @@ public partial class Sonic3DBlast
                 EffectPack.Respond(Request, EffectStatus.FailTemporary, "Unavailable in special stages!");
                 return false;
             }
+            if (EffectPack.IsOoB())
+            {
+                return false;
+            }
             ushort invinc = 0;
             if (EffectPack.rom_type == ROMType.DIRECTORS_CUT)
                 Connector.Read16(DirectorsCutAddresses.ADDR_SONIC_INVINCIBILITY, out invinc);

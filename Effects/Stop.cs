@@ -26,6 +26,10 @@ public partial class Sonic3DBlast
                 EffectPack.Respond(Request, EffectStatus.FailTemporary, "Unavailable in special stages!");
                 return false;
             }
+            if (EffectPack.IsOoB())
+            {
+                return false;
+            }
             return base.StartCondition();
         }
 

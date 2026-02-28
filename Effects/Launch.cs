@@ -17,6 +17,15 @@ public partial class Sonic3DBlast
 
         public override EffectPack.Mutex Mutexes { get; } = new[] { "sonic" };
 
+        public override bool StartCondition()
+        {
+            if (EffectPack.IsOoB())
+            {
+                return false;
+            }
+            return base.StartCondition();
+        }
+
         public override bool StartAction()
         {
             if (EffectPack.rom_type == ROMType.DIRECTORS_CUT)
