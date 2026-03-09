@@ -16,6 +16,10 @@ public partial class Sonic3DBlast
 
         public override EffectPack.Mutex Mutexes { get; } = new[] { "life" };
 
+        public override SITimeSpan FollowUpDelay => SITimeSpan.FromSeconds(0.05);
+
+        private bool DirectorsCutEnabled = false;
+
         public override bool StartCondition()
         {
             if (EffectPack.IsSpecialStage())
@@ -37,18 +41,16 @@ public partial class Sonic3DBlast
             {
                 Connector.Read16(DirectorsCutAddresses.ADDR_RINGS, out ushort rings);
                 Connector.Write16(DirectorsCutAddresses.ADDR_RINGS, 0);
-                Connector.Read16(DirectorsCutAddresses.ADDR_FLICKIES_FOLLOWING, out ushort flicky);
-                Connector.Write16(DirectorsCutAddresses.ADDR_FLICKIES_FOLLOWING, 0);
                 Connector.Read16(DirectorsCutAddresses.ADDR_SONIC_INVINCIBILITY, out ushort invinc);
                 Connector.Write16(DirectorsCutAddresses.ADDR_SONIC_INVINCIBILITY, 0);
-                Connector.Read16(DirectorsCutAddresses.ADDR_SONIC_SPEED_SHOES, out ushort shoes);
-                Connector.Write16(DirectorsCutAddresses.ADDR_SONIC_SPEED_SHOES, 0);
+                Connector.Read16(DirectorsCutAddresses.ADDR_DX_ENABLED, out ushort dx);
+                DirectorsCutEnabled = dx != 0;
+                Connector.Write16(DirectorsCutAddresses.ADDR_DX_ENABLED, 0);
                 bool success = Connector.Write16(DirectorsCutAddresses.ADDR_SHIELD, 0);
                 if (!success)
                 {
-                    Connector.Write16(DirectorsCutAddresses.ADDR_FLICKIES_FOLLOWING, flicky);
                     Connector.Write16(DirectorsCutAddresses.ADDR_SONIC_INVINCIBILITY, invinc);
-                    Connector.Write16(DirectorsCutAddresses.ADDR_SONIC_SPEED_SHOES, shoes);
+                    Connector.Write16(DirectorsCutAddresses.ADDR_DX_ENABLED, dx);
                     return ResetRings(rings);
                 }
                 return Connector.Write16(DirectorsCutAddresses.ADDR_SONIC_JUST_HURT, -1);
@@ -67,6 +69,15 @@ public partial class Sonic3DBlast
                 }
                 return Connector.Write16(Sonic3DBlastAddresses.ADDR_SONIC_JUST_HURT, -1);
             }
+        }
+
+        public override bool StartFollowup()
+        {
+            if (DirectorsCutEnabled)
+            {
+                Connector.Write16(DirectorsCutAddresses.ADDR_DX_ENABLED, 1);
+            }
+            return base.StartFollowup();
         }
 
         private bool ResetRings(ushort rings)
