@@ -37,14 +37,14 @@ public partial class Sonic3DBlast
                 if (EffectPack.IsSpecialStage())
                     return Connector.Write16(DirectorsCutAddresses.ADDR_SPECIAL_STAGE_VELOCITY_Y, 0xFF9C);
                 else
-                    return Connector.Write16(DirectorsCutAddresses.ADDR_SONIC_VELOCITY_Y, 0xFF9C);
+                    return Connector.Write16(DirectorsCutAddresses.ADDR_SONIC_VELOCITY_Z, 0xFF9C);
             }
             else
             {
                 if (EffectPack.IsSpecialStage())
                     return Connector.Write16(Sonic3DBlastAddresses.ADDR_SPECIAL_STAGE_VELOCITY_Y, 0xFF9C);
                 else
-                    return Connector.Write16(Sonic3DBlastAddresses.ADDR_SONIC_VELOCITY_Y, 0xFF9C);
+                    return Connector.Write16(Sonic3DBlastAddresses.ADDR_SONIC_VELOCITY_Z, 0xFF9C);
             }
         }
     }
