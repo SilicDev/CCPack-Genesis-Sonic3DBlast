@@ -22,6 +22,8 @@ public partial class Sonic3DBlast
                 if (Connector.IsEqual16(DirectorsCutAddresses.ADDR_LEVEL_FLICKY_BONUS, 100) ||
                         Connector.IsEqual16(DirectorsCutAddresses.ADDR_LEVEL_FLICKY_BONUS, 150))
                     return false;
+                if (EffectPack.IsSpecialStage())
+                    return false;
             }
             else
             {
